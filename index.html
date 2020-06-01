@@ -21,7 +21,7 @@
     
     <nav class="navbar navbar-light bg-light">
         <a class="navbar-brand" href="./">
-            <i class="fas fa-cloud-sun"></i> Weather Dashboard
+            <i class="fas fa-cloud-sun"></i> My Weather Dashboard
         </a>
 
         <div class="btn-group btn-group-toggle" onclick="changeUnit()" data-toggle="buttons">
@@ -42,10 +42,12 @@
                 <div class="card bg-light mb-3">
                     <div class="card-header">
                         <label for="citySearch">Search for a City:</label>
+                        <button id='geolocation' class='btn btn-sm' onclick='geoLocation()'><i class="fas fa-location-arrow"></i></button>
                         <form class="form-inline">
                             <div class='mr-3'>
                                 <input class="form-control" id='search' type="search" placeholder="City Name" aria-label="Search">
                             </div>
+                            
                             <button class="btn btn-outline-dark" onclick="searchCity()" type="submit">Search</button>
                           </form>
                     </div>
@@ -70,7 +72,7 @@
                         </div>
                     </div>
                 </section>
-                <section></section>
+                <section>
                     <h3>5-Day Forecast</h3>
                     <div class='row' id='forecast'></div>
                 </section>

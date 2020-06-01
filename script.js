@@ -1,12 +1,24 @@
 const key = '2d16edaf814c74f9e0898876fc6cc68f'
 const search = 'Toronto'
 let unit = 'metric'
+let country;
+let geolocation = localStorage.geolocation;
 
-loadData(search,unit,);
+startup()
 
-navigator.geolocation.getCurrentPosition(async function(position){ 
-    loadData(search,unit,position.coords);
-})
+function startup(){
+    loadData(search,unit,);
+    if (geolocation) loadData(search,unit,JSON.parse(geolocation));
+    else geoLocation();
+}
+
+
+function geoLocation(){
+    navigator.geolocation.getCurrentPosition(async function(position){ 
+        loadData(search,unit,position.coords);
+        localStorage.geolocation = JSON.stringify({latitude:position.coords.latitude,longitude:position.coords.longitude})
+    });
+}
 
 
 async function loadData(search,unit,geo){
@@ -16,11 +28,13 @@ async function loadData(search,unit,geo){
     currentFetch.text().then(function(data){
         const getData = JSON.parse(data)
         const icon = `http://openweathermap.org/img/wn/${getData.weather[0].icon}.png`
+        country = getData.sys.country
 
         document.querySelector('#name').innerHTML = `<span id='city'>${getData.name}</span> (${moment(getData.dt,'X').format('L')}) <img src='${icon}'>`;
         document.querySelector('#temp').innerHTML = `Temperature: ${getData.main.temp.toFixed(1)}\xB0${(unit=='metric')? 'C': 'F'}` ;
         document.querySelector('#humidity').innerHTML = `Humidity: ${getData.main.humidity}%`
         document.querySelector('#windSpeed').innerHTML = `Wind Speed: ${getData.wind.speed} ${(unit=='metric')? 'm/s': 'mph'}`
+       
         
         getForecast(getData.coord.lat,getData.coord.lon)
     })
@@ -66,7 +80,8 @@ function changeUnit(){
 }
 
 function searchCity() {
-    event.preventDefault()
-    loadData(document.querySelector('#search').value,unit,)
+    event.preventDefault();
+    const searchCity = document.querySelector('#search');
+    loadData(searchCity.value,unit,);
+    searchCity.value = '';
 }
-
