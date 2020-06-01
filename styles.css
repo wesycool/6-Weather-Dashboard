@@ -15,8 +15,8 @@
     margin-bottom:5px;
 }
 
-@media screen and (orientation: portrait) and (max-width: 414px){
-    
+@media screen  and (max-width: 568px){
+
     #searchListID{
         display: none;
     }
