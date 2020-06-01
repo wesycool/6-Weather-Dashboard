@@ -12,6 +12,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src='./script.js'></script>
     
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </head>
 <body>
     
@@ -19,22 +23,30 @@
         <a class="navbar-brand" href="./">
             <i class="fas fa-cloud-sun"></i> Weather Dashboard
         </a>
+
+        <div class="btn-group btn-group-toggle" onclick="changeUnit()" data-toggle="buttons">
+            <label class="btn btn-secondary active" id='metric'>
+                <input type="radio" name="options" id="metric" checked> Metric
+              </label>
+              <label class="btn btn-secondary" id='imperial'>
+                <input type="radio" name="options" id="imperial"> Imperial
+              </label>
+        </div>
       </nav>
 
-      <div class='container'>
+      <div class='margin'>
         <div class='row'>
 
             <!-- Search Tab -->
-            <div class='col col-md-3 no-padding'>
-
+            <div class='col col-md-4 col-lg-3'>
                 <div class="card bg-light mb-3">
                     <div class="card-header">
+                        <label for="citySearch">Search for a City:</label>
                         <form class="form-inline">
-                            <label for="citySearch">Search for a City:</label>
-                            <div class='mr-lg-2'>
-                                <input class="form-control " type="search" placeholder="City Name" aria-label="Search">
+                            <div class='mr-3'>
+                                <input class="form-control" id='search' type="search" placeholder="City Name" aria-label="Search">
                             </div>
-                            <button class="btn btn-outline-dark" type="submit">Search</button>
+                            <button class="btn btn-outline-dark" onclick="searchCity()" type="submit">Search</button>
                           </form>
                     </div>
 
@@ -46,7 +58,7 @@
             </div>
 
             <!-- Weather Info -->
-            <div class='col no-padding'>
+            <div class='col'>
                 <section id='current'>
                     <div class="card mb-3">
                         <h3 class="card-header bg-transparent" id='name'></h3>

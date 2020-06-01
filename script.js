@@ -1,17 +1,24 @@
 const key = '2d16edaf814c74f9e0898876fc6cc68f'
 const search = 'Toronto'
-const unit = 'metric'
+let unit = 'metric'
+
+loadData(search,unit,);
+
+navigator.geolocation.getCurrentPosition(async function(position){ 
+    loadData(search,unit,position.coords);
+})
 
 
-async function loadData(search,unit){
-    const currentFetch = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${search}&units=${unit}&appid=${key}`)
+async function loadData(search,unit,geo){
+    const parameters = (geo != null)? `lat=${geo.latitude}&lon=${geo.longitude}`: `q=${search}`;
+    const currentFetch = await fetch(`https://api.openweathermap.org/data/2.5/weather?${parameters}&units=${unit}&appid=${key}`)
 
     currentFetch.text().then(function(data){
         const getData = JSON.parse(data)
         const icon = `http://openweathermap.org/img/wn/${getData.weather[0].icon}.png`
 
-        document.querySelector('#name').innerHTML = `${getData.name} (${moment(getData.dt,'X').format('L')}) <img src='${icon}'>`;
-        document.querySelector('#temp').innerHTML = `Temperature: ${getData.main.temp}\xB0${(unit=='metric')? 'C': 'F'}` ;
+        document.querySelector('#name').innerHTML = `<span id='city'>${getData.name}</span> (${moment(getData.dt,'X').format('L')}) <img src='${icon}'>`;
+        document.querySelector('#temp').innerHTML = `Temperature: ${getData.main.temp.toFixed(1)}\xB0${(unit=='metric')? 'C': 'F'}` ;
         document.querySelector('#humidity').innerHTML = `Humidity: ${getData.main.humidity}%`
         document.querySelector('#windSpeed').innerHTML = `Wind Speed: ${getData.wind.speed} ${(unit=='metric')? 'm/s': 'mph'}`
         
@@ -19,36 +26,47 @@ async function loadData(search,unit){
     })
 }
 
+
 async function getForecast(lat,lon){
     const forecastFetch = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=${unit}&exclude=minutely,hourly&appid=${key}`);
 
     forecastFetch.text().then(function(data){
         const getData = JSON.parse(data).daily
 
-        console.log(getData)
         document.querySelector('#uvIndex').innerHTML = `UV Index: ${getData[0].uvi}`;
         document.querySelector('#forecast').innerHTML = '';
         
         for (const index in getData){
             if(![0,6,7].includes(Number(index))){
                 document.querySelector('#forecast').innerHTML += `
-
-                    <div class='col'>
-                        <div class="card mb-3">
-                            <div class="card-header bg-transparent">${moment(getData[index].dt,'X').format('L')}</div>
-                            <div class="card-body">
-                                <img src='http://openweathermap.org/img/wn/${getData[index].weather[0].icon}.png'>
-                                <p>Temperature: ${getData[index].temp.day}\xB0${(unit=='metric')? 'C': 'F'}</p>
-                                <p>Humidity: ${getData[index].humidity}%</p>
-                            </div>
+                <div class='col'>
+                    <div class="card mb-3">
+                        <div class="card-header bg-transparent">${moment(getData[index].dt,'X').format('L')}</div>
+                        <div class="card-body">
+                            <img src='http://openweathermap.org/img/wn/${getData[index].weather[0].icon}.png'>
+                            <p>Temperature: ${getData[index].temp.day.toFixed(1)}\xB0${(unit=='metric')? 'C': 'F'}</p>
+                            <p>Humidity: ${getData[index].humidity}%</p>
                         </div>
-                    </div>`;
+                    </div>
+                </div>`;
             }
         }
-
-        
     })
 }
 
 
-loadData(search,unit)
+function changeUnit(){
+    unit = event.target.id
+    loadData(document.querySelector('#city').textContent,unit,)
+    
+    $(document).ready(function(){
+        $().button('toggle')
+        $().button('dispose')
+    })
+}
+
+function searchCity() {
+    event.preventDefault()
+    loadData(document.querySelector('#search').value,unit,)
+}
+
