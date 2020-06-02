@@ -5,4 +5,4 @@ Get current weather and a 5-day forecast from anywhere in the world. You can eas
 GitHub Page Link: https://wesycool.github.io/6-Weather-Dashboard/
 
 ![ScreenShot]
-(/screenshot.png)
+(screenshot.png)
